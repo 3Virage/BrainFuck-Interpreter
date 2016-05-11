@@ -3,7 +3,7 @@
 #define MEM_S 100
 
 void print(char*);
-void execute(char* mem,char*buffer, char** mem_ptr,char** buffer_ptr);
+void execute(char** mem_ptr,char** buffer_ptr);
 int main(int argc,char* argv[])
 {
 
@@ -32,7 +32,7 @@ printf("Your code:\n");
 buffer_ptr=buffer;
 printf("Output:\n");
 
-execute(mem,buffer,&mem_ptr,&buffer_ptr);
+execute(&mem_ptr,&buffer_ptr);
 
  putchar('\n');
  print(mem);
@@ -40,12 +40,14 @@ putchar('\n');
     return 0;
 }
 
-void execute(char* mem,char*buffer, char** mem_ptr,char** buffer_ptr)
+void execute(char** mem_ptr,char** buffer_ptr)
 {
 while(1){
+int k=0;
     char task;
     task=(*(*buffer_ptr));
     (*buffer_ptr)++;
+
     switch(task)
     {
     case'+':
@@ -61,17 +63,26 @@ while(1){
         (*mem_ptr)++;
         break;
     case'.':
-    printf("%d",(*(*mem_ptr)));
+    printf("%d ",(*(*mem_ptr)));
     // putchar(*mem_ptr);
         break;
     case',':
        (*(*mem_ptr))=getchar();
         break;
     case'[':
-        if((*(*mem_ptr))){
-        execute(mem,buffer,mem_ptr,buffer_ptr);
-        }
+
+
+        while((*(*mem_ptr))){
+        k++;
+         char* mem_temp=*mem_ptr;
+        char* buffer_temp=*buffer_ptr;
+        execute(&mem_temp,&buffer_temp);
+       // buffer_ptr=&buffer_temp;
+                }
+                (*buffer_ptr)+=k;
+                k=0;
         break;
+
     case']':
     return;
         break;
