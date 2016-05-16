@@ -4,6 +4,7 @@
 
 void print(char*);
 void execute(char** mem_ptr,char** buffer_ptr);
+char * findend(char* begin);
 int main(int argc,char* argv[])
 {
 
@@ -12,7 +13,7 @@ int main(int argc,char* argv[])
     char * buffer;
     char * buffer_ptr;
 
-    data=fopen(argv[1],"r");
+    data=fopen("data.txt","r");
 
     fseek (data , 0 , SEEK_END);
     size = ftell (data);
@@ -22,81 +23,87 @@ int main(int argc,char* argv[])
 
     fread(buffer,1,size,data);
 
-printf("Your code:\n");
+    printf("Your code:\n");
     for(int i=0; i<size; i++)
         putchar(buffer[i]);
 
     char mem[MEM_S]= {0};
     char* mem_ptr=mem;
     print(mem);
-buffer_ptr=buffer;
-printf("Output:\n");
+    buffer_ptr=buffer;
+    printf("Output:\n");
 
-execute(&mem_ptr,&buffer_ptr);
+    execute(&mem_ptr,&buffer_ptr);
 
- putchar('\n');
- print(mem);
-putchar('\n');
+    putchar('\n');
+    print(mem);
+    putchar('\n');
     return 0;
 }
 
 void execute(char** mem_ptr,char** buffer_ptr)
 {
-while(1){
-int k=0;
-    char task;
-    task=(*(*buffer_ptr));
-    (*buffer_ptr)++;
-
-    switch(task)
+    printf("Execute:\n");
+ char* mem_temp;
+char* buffer_temp;
+char* last;
+    while(1)
     {
-    case'+':
-        (*(*mem_ptr))++;
-        break;
-    case'-':
-        (*(*mem_ptr))--;
-        break;
-    case'<':
-        (*mem_ptr)--;
-        break;
-    case'>':
-        (*mem_ptr)++;
-        break;
-    case'.':
-    printf("%d ",(*(*mem_ptr)));
-    // putchar(*mem_ptr);
-        break;
-    case',':
-       (*(*mem_ptr))=getchar();
-        break;
-    case'[':
+        int k=0;
+        char task;
+        task=(*(*buffer_ptr));
+        (*buffer_ptr)++;
 
+        switch(task)
+        {
+        case'+':
+            (*(*mem_ptr))++;
+            break;
+        case'-':
+            (*(*mem_ptr))--;
+            break;
+        case'<':
+            (*mem_ptr)--;
+            break;
+        case'>':
+            (*mem_ptr)++;
+            break;
+        case'.':
+            printf("%d ",(*(*mem_ptr)));
+            // putchar(*mem_ptr);
+            break;
+        case',':
+            (*(*mem_ptr))=getchar();
+            break;
+        case'[':
 
-        while((*(*mem_ptr))){
-        k++;
-         char* mem_temp=*mem_ptr;
-        char* buffer_temp=*buffer_ptr;
-        execute(&mem_temp,&buffer_temp);
-       // buffer_ptr=&buffer_temp;
+                while((*(*mem_ptr)))
+                {
+                    mem_temp=*mem_ptr;
+                    buffer_temp=*buffer_ptr;
+                    execute(&mem_temp,&buffer_temp);
+                    *mem_ptr=mem_temp;
+                        last=buffer_temp;
+                    printf("%c",*buffer_temp);
                 }
-                (*buffer_ptr)+=k;
-                k=0;
-        break;
 
-    case']':
-    return;
-        break;
+            break;
+
+        case']':
+            return;
+            break;
         default:
-        break;
+            break;
+        }
     }
-    }
-return;
+    return;
 }
+
 
 
 void print(char* mem)
 {
     for(int i=0; i<MEM_S; i++)
         printf("%d",mem[i]);
-        putchar('\n');
+    putchar('\n');
 }
